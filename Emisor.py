@@ -11,17 +11,15 @@ class Emisor:
     def verificacion(self):
         mensaje = self.mensaje
         self.mensajeBinario = ' '.join(format(ord(x), 'b') for x in mensaje)
+        print(self.mensajeBinario)
         return self.mensajeBinario
 
     def ruido(self):
         return self.mensajeBinario
 
     def transmision(self, c):
-        while True:
-            # rcvdData = c.recv(1024).decode()
-            # print("S:", rcvdData)
-            sendData = self.mensajeBinario
-            c.send(sendData.encode())
-            if(sendData == "Bye" or sendData == "bye"):
-                break
-        c.close()
+
+        sendData = self.mensajeBinario
+        c.send(sendData.encode())
+        if(sendData == "Bye" or sendData == "bye"):
+            c.close()
