@@ -1,7 +1,7 @@
 from multiprocessing.spawn import old_main_modules
 
 from Emisor import *
-
+import socket
 from multiprocessing.spawn import old_main_modules
 
 # binario, checksum, probabilidad para agregar ruido
@@ -22,7 +22,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             if (opcion == "1"):
                 mensaje = input("Escriba el mensaje que desea enviar: ")
                 emisor = Emisor(mensaje)
-                mensajeAEnviar = emisor.mensaje
                 emisor.verificacion()
                 emisor.transmision(conn)
             else:
