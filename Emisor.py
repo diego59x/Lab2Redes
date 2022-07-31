@@ -1,3 +1,4 @@
+import random
 class Emisor:
     def __init__(self, mensaje):
         self.mensaje = mensaje
@@ -13,6 +14,18 @@ class Emisor:
 
     # cambiar bit
     def ruido(self):
+        probabilidadCambiarBit = random.randint(0,99)
+
+        # Probabilidad 1 en 100
+        if (probabilidadCambiarBit == 5):
+            bitACambiar = random.randint(0, len(self.mensajeBinario))
+
+            mensajeEnLista = list(self.mensajeBinario)
+
+            reemplazo = '1' if mensajeEnLista[bitACambiar] == '0' else '0'
+
+            mensajeEnLista[bitACambiar] = reemplazo
+
         return self.mensajeBinario
 
     # bit pariedad, checksum -> hay que enviarla tambien

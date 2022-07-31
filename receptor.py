@@ -27,6 +27,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
 
     while True:
-        data = s.recv(65432).decode()
+        data = s.recv(65432).decode() # esto va en codificacion
         receptor = Receptor(data)
         receptor.verificacion()
