@@ -27,6 +27,17 @@ class Emisor:
             mensajeEnLista[bitACambiar] = reemplazo
 
         return self.mensajeBinario
+    
+    def paridadSimple(self):
+        cantUnos = self.mensajeBinario.count('1')
+        if cantUnos % 2 == 0:
+            # cantUnos = cantUnos + "0"
+            self.mensajeBinario += '0'
+            """ return False   """
+        else:
+            # cantUnos = cantUnos + "1"
+            self.mensajeBinario += '1'
+            """ return True """
 
     # bit pariedad, checksum -> hay que enviarla tambien
     def transmision(self, c):

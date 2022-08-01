@@ -15,7 +15,7 @@ class Receptor:
         print(type(self.mensaje))
         # return self.mensaje
 
-        if paridadSimple():
+        if self.paridadSimple():
             print("Mensaje viene bien")
         else:
             print("Mensaje vino mal")
@@ -29,14 +29,19 @@ class Receptor:
         pass
 
     def paridadSimple(self):
-        cantUnos = self.mensaje.count("1")
-
+        mensaje_lista = self.mensaje.tolist()
+        cantUnos = mensaje_lista[:-1].count(1)
+        verificacion = None
         if cantUnos % 2 == 0:
             # cantUnos = cantUnos + "0"
-            return False  
+            verificacion = 0
         else:
             # cantUnos = cantUnos + "1"
+            verificacion = 1
+        if (self.mensaje.tolist()[-1] == verificacion): 
             return True
+        else:
+            return False
 
         
 
