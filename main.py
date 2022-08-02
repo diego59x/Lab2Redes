@@ -23,7 +23,8 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 mensaje = input("Escriba el mensaje que desea enviar: ")
                 emisor = Emisor(mensaje)
                 emisor.verificacion()
-                emisor.paridadSimple()
+                # emisor.paridadSimple()
+                emisor.findChecksum()
                 emisor.ruido()
                 emisor.transmision(conn)
             else:

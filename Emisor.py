@@ -9,7 +9,7 @@ class Emisor:
 
     def verificacion(self):
         mensaje = self.mensaje
-        self.mensajeBinario = ' '.join(format(ord(x), 'b') for x in mensaje)
+        self.mensajeBinario = (' '.join(format(ord(x), 'b') for x in mensaje)).replace(' ','')
         return self.mensajeBinario
 
     # cambiar bit
@@ -38,6 +38,34 @@ class Emisor:
             # cantUnos = cantUnos + "1"
             self.mensajeBinario += '1'
             """ return True """
+
+    def findChecksum(self):
+        # Dividing sent message in packets of k bits.
+        SentMessage = self.mensajeBinario
+        k = 8
+        c1 = SentMessage[0:k]
+        c2 = SentMessage[k:2*k]
+        c3 = SentMessage[2*k:3*k]
+        c4 = SentMessage[3*k:4*k]
+    
+        # Calculating the binary sum of packets
+        Sum = bin(int(c1, 2)+int(c2, 2)+int(c3, 2)+int(c4, 2))[2:]
+    
+        # Adding the overflow bits
+        if(len(Sum) > k):
+            x = len(Sum)-k
+            Sum = bin(int(Sum[0:x], 2)+int(Sum[x:], 2))[2:]
+        if(len(Sum) < k):
+            Sum = '0'*(k-len(Sum))+Sum
+    
+        # Calculating the complement of sum
+        Checksum = ''
+        for i in Sum:
+            if(i == '1'):
+                Checksum += '0'
+            else:
+                Checksum += '1'
+        self.mensajeBinario = Checksum + SentMessage
 
     # bit pariedad, checksum -> hay que enviarla tambien
     def transmision(self, c):
