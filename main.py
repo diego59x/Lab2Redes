@@ -24,9 +24,13 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 emisor = Emisor(mensaje)
                 emisor.verificacion()
                 # emisor.paridadSimple()
-                emisor.calculateChecksum()
+                # emisor.calculateChecksum()
+
+                emisor.hamming()
                 emisor.ruido()
-                emisor.transmision(conn)
+
+                emisor.transmision(conn, isHamming = True) # para hamming
+                emisor.transmision(conn) # para el resto de algoritmos
             else:
                 conn.close()
 

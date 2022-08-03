@@ -1,5 +1,6 @@
 import socket
 from bitarray import bitarray
+import json
 
 HOST = "127.0.0.1"  # The server's hostname or IP address
 PORT = 65432    # The port used by the server
@@ -89,11 +90,41 @@ class Receptor:
         else:
             return False
 
+    def detectHammingError(self, arr, nr):
+        n = len(arr)
+        res = 0
+    
+        # Calculate parity bits again
+        for i in range(nr):
+            val = 0
+            for j in range(1, n + 1):
+                if(j & (2**i) == (2**i)):
+                    val = val ^ int(arr[-1 * j])
+    
+            # Create a binary no by appending
+            # parity bits together.
+    
+            res = res + val*(10**i)
+    
+        # Convert binary to decimal
+        return int(str(res), 2)
+
         
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
     s.connect((HOST, PORT))
 
     while True:
-        data = s.recv(65432)
+        data = s.recv(65432).decode("utf-8")
         receptor = Receptor()
-        receptor.codificacion(data)
+        print("DATA", data)
+        if "rValue" in data:
+            dataSerialized = json.loads(data)
+            arr = dataSerialized.get("message")
+            r = dataSerialized.get("rValue")
+            correction = receptor.detectHammingError(arr, r)
+            if(correction==0):
+                print("There is no error in the received message.")
+            else:
+                print("The position of error is ",len(arr)-correction+1,"from the left")
+        else:
+            receptor.codificacion(data)
