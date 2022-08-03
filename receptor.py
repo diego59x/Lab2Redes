@@ -22,58 +22,54 @@ class Receptor:
 
     # deserealizar el mensaje
     def codificacion(self, data):
-        self.mensaje = bitarray(str(data.decode()))
+        self.mensaje = bitarray(str(data))
         receptor.verificacion()
 
     # volver a calcular el checksum o bit pariedad para ver si esta bien
     def transmision(self):
         pass
 
-    def checkReceiverChecksum(self, ReceivedMessage):
+    def checkReceiverChecksum(self, mensajeRecibido):
    
-        k = 8
-        # Dividing sent message in packets of k bits.
-        ReceivedMessage = ReceivedMessage.to01()
-        Checksum = ReceivedMessage[0:k]
-        c1 = ReceivedMessage[k:2*k]
-        c2 = ReceivedMessage[2*k:3*k]
-        c3 = ReceivedMessage[3*k:4*k]
-        c4 = ReceivedMessage[4*k:5*k]
-
-        # Calculating the binary sum of packets + checksum
-        ReceiverSum = bin(int(c1, 2)+int(c2, 2)+int(Checksum, 2) +
-                        int(c3, 2)+int(c4, 2)+int(Checksum, 2))[2:]
-    
-        # Adding the overflow bits
-        if(len(ReceiverSum) > k):
-            x = len(ReceiverSum)-k
-            ReceiverSum = bin(int(ReceiverSum[0:x], 2)+int(ReceiverSum[x:], 2))[2:]
-    
-        # Calculating the complement of sum
-        ReceiverChecksum = ''
-        for i in ReceiverSum:
-            if(i == '1'):
-                ReceiverChecksum += '0'
-            else:
-                ReceiverChecksum += '1'
-
-        finalsum=bin(int(Checksum,2)+int(ReceiverChecksum,2))[2:]
-
-        # Finding the sum of checksum and received checksum
-        finalcomp=''
-        for i in finalsum:
-            if(i == '1'):
-                finalcomp += '0'
-            else:
-                finalcomp += '1'
+        split = 8
         
-        # If sum = 0, No error is detected
-        if(int(finalcomp,2) == 0):
-            print("STATUS: ACCEPTED")
-            
-        # Otherwise, Error is detected
+        mensajeRecibido = mensajeRecibido.to01()
+        Checksum = int(mensajeRecibido[0 : split], 2)
+        bloque1 = int(mensajeRecibido[split : 2 * split], 2)
+        bloque2 = int(mensajeRecibido[2 * split : 3 * split], 2)
+        bloque3 = int(mensajeRecibido[3 * split : 4 * split], 2)
+        bloque4 = int(mensajeRecibido[4 * split : 5 * split], 2)
+
+        # bloques + checksum
+        sumaDeBloques = bin(bloque1 + bloque2 + Checksum + bloque3 + bloque4 + Checksum )[2:]
+    
+        # Si hay bits de mas se agregan a la suma
+        if(len(sumaDeBloques) > split):
+            x = len(sumaDeBloques)-split
+            sumaDeBloques = bin(int(sumaDeBloques[0:x], 2)+int(sumaDeBloques[x:], 2))[2:]
+    
+        checkSumR = ''
+        for i in sumaDeBloques:
+            if(i == '1'):
+                checkSumR += '0'
+            else:
+                checkSumR += '1'
+
+        sumaFinal=bin(Checksum + int(checkSumR,2))[2:]
+
+        # Hacemos string porque si fuera int, se sumarian los valores y no la representacion bits
+        complemento = ''
+        for i in sumaFinal:
+            if(int(i) == 0):
+                complemento += '1'
+            else:
+                complemento += '0'
+        
+        # Si la suma no es cero, el error no fue detectado
+        if(int(complemento,2) == 0):
+            print("Mensaje viene bien")
         else:
-            print("STATUS: ERROR DETECTED")
+            print("Mensaje vino mal")
 
     def paridadSimple(self):
         mensaje_lista = self.mensaje.tolist()

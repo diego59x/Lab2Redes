@@ -20,7 +20,7 @@ class Emisor:
         print("MENSAJE SIN RUIDO", self.mensajeBinario)
 
         # Probabilidad 1 en 100
-        if (probabilidadCambiarBit < 99):
+        if (probabilidadCambiarBit < 50):
             bitACambiar = random.randint(0, len(self.mensajeBinario))
 
             reemplazo = '1' if self.mensajeBinario[bitACambiar] == '0' else '0'
