@@ -17,15 +17,15 @@ class Emisor:
         probabilidadCambiarBit = random.randint(0,99)
 
         # Probabilidad 1 en 100
-        if (probabilidadCambiarBit == 5):
+        print(probabilidadCambiarBit)
+        if (probabilidadCambiarBit < 50):
             bitACambiar = random.randint(0, len(self.mensajeBinario))
 
-            mensajeEnLista = list(self.mensajeBinario)
-
-            reemplazo = '1' if mensajeEnLista[bitACambiar] == '0' else '0'
-
-            mensajeEnLista[bitACambiar] = reemplazo
-
+            reemplazo = '1' if self.mensajeBinario[bitACambiar] == '0' else '0'
+            self.mensajeBinario = self.mensajeBinario[:bitACambiar] + \
+                reemplazo + \
+                self.mensajeBinario[bitACambiar + 1:]
+            
         return self.mensajeBinario
     
     def paridadSimple(self):
