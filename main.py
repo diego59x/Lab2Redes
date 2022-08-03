@@ -24,7 +24,7 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 emisor = Emisor(mensaje)
                 emisor.verificacion()
                 # emisor.paridadSimple()
-                emisor.findChecksum()
+                emisor.calculateChecksum()
                 emisor.ruido()
                 emisor.transmision(conn)
             else:

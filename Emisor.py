@@ -39,33 +39,31 @@ class Emisor:
             self.mensajeBinario += '1'
             """ return True """
 
-    def findChecksum(self):
-        # Dividing sent message in packets of k bits.
-        SentMessage = self.mensajeBinario
-        k = 8
-        c1 = SentMessage[0:k]
-        c2 = SentMessage[k:2*k]
-        c3 = SentMessage[2*k:3*k]
-        c4 = SentMessage[3*k:4*k]
+    def calculateChecksum(self):
+        
+        mensaje = self.mensajeBinario
+        split = 8
+        bloque1 = int(mensaje[0 : split], 2)
+        bloque2 = int(mensaje[split : 2 * split], 2)
+        bloque3 = int(mensaje[2 * split : 3 * split], 2)
+        bloque4 = int(mensaje[3 * split : 4 * split], 2)
+
+        sumaBinaria = bin(bloque1 + bloque2 + bloque3 + bloque4)[2:]
     
-        # Calculating the binary sum of packets
-        Sum = bin(int(c1, 2)+int(c2, 2)+int(c3, 2)+int(c4, 2))[2:]
+        if(len(sumaBinaria) > split):
+            x = len(sumaBinaria) - split
+            sumaBinaria = bin(int(sumaBinaria[0:x], 2)+int(sumaBinaria[x:], 2))[2:]
+        if(len(sumaBinaria) < split):
+            sumaBinaria = '0' * (split-len(sumaBinaria))+sumaBinaria
     
-        # Adding the overflow bits
-        if(len(Sum) > k):
-            x = len(Sum)-k
-            Sum = bin(int(Sum[0:x], 2)+int(Sum[x:], 2))[2:]
-        if(len(Sum) < k):
-            Sum = '0'*(k-len(Sum))+Sum
-    
-        # Calculating the complement of sum
+        # Hacemos string porque si fuera int, se sumarian los valores y no la representacion bits
         Checksum = ''
-        for i in Sum:
-            if(i == '1'):
-                Checksum += '0'
-            else:
+        for i in sumaBinaria:
+            if(int(i) == 0):
                 Checksum += '1'
-        self.mensajeBinario = Checksum + SentMessage
+            else:
+                Checksum += '0'
+        self.mensajeBinario = Checksum + mensaje
 
     # bit pariedad, checksum -> hay que enviarla tambien
     def transmision(self, c):
